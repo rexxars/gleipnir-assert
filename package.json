@@ -1,0 +1,35 @@
+{
+  "name": "gleipnir-assert",
+  "version": "0.0.1",
+  "description": "Gleipnir module that asserts exchanges, queues and bindings",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rexxars/gleipnir-assert.git"
+  },
+  "keywords": [
+    "gleipnir",
+    "amqp",
+    "assert",
+    "queue",
+    "exchange",
+    "binding"
+  ],
+  "author": "Espen Hovlandsdal <espen@hovlandsdal.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rexxars/gleipnir-assert/issues"
+  },
+  "homepage": "https://github.com/rexxars/gleipnir-assert#readme",
+  "dependencies": {
+    "async": "^1.5.0",
+    "eslint": "^1.8.0",
+    "eslint-config-vaffel": "^3.0.0",
+    "lodash.merge": "^3.3.2",
+    "lodash.partial": "^3.1.1",
+    "lodash.pick": "^3.1.0"
+  }
+}
