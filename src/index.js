@@ -69,7 +69,7 @@ function assertQueue(channel, queue, callback) {
             }
 
             var binding = merge({ queue: ok.queue }, queue.binding);
-            assertBinding(binding, callback);
+            assertBinding(channel, binding, callback);
         };
     }
 
