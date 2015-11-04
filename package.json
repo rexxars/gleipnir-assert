@@ -4,7 +4,10 @@
   "description": "Gleipnir module that asserts exchanges, queues and bindings",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha"
+    "pretest": "npm run lint",
+    "lint": "eslint .",
+    "test": "istanbul cover _mocha",
+    "prepublish": "npm prune && npm test"
   },
   "repository": {
     "type": "git",
@@ -31,5 +34,10 @@
     "lodash.merge": "^3.3.2",
     "lodash.partial": "^3.1.1",
     "lodash.pick": "^3.1.0"
+  },
+  "devDependencies": {
+    "istanbul": "^0.4.0",
+    "mocha": "^2.3.3",
+    "sinon": "^1.17.2"
   }
 }

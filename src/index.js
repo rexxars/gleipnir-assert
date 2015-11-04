@@ -11,11 +11,20 @@ var validQueueOptions = [
     'deadLetterExchange', 'deadLetterRoutingKey', 'maxLength', 'maxPriority'
 ];
 
+/**
+ * Assert that the passed queues, exchanges and bindings exist
+ *
+ * @param {AmqpChannel} channel    Amqp channel to use for asserting
+ * @param {Object}      assertions An object of assertions to perform. Valid keys are:
+ *                                 `queues`, `exchanges` and `bindings`, and must be arrays.
+ * @param {Function}    callback   Function to call once the assertions have been completed
+ */
 function assertStuff(channel, assertions, callback) {
     // Step 1, validate the assertions
     var assertsErr = validateAssertions(assertions);
     if (assertsErr) {
-        return setImmediate(callback, assertsErr);
+        setImmediate(callback, assertsErr);
+        return;
     }
 
     // Step 2, create partialed functions that holds the channel
@@ -43,6 +52,14 @@ function assertStuff(channel, assertions, callback) {
     });
 }
 
+/**
+ * Assert that an exchange exists (create it if non-existant)
+ *
+ * @param {AmqpChannel}   channel  Amqp channel to use for asserting the exchange
+ * @param {Object|String} exchange Object containing the `name`, `type` and an optional object of `options` to use.
+ *                                 If no `type` is given, it will default to `fanout`.
+ * @param {Function}      callback Function to call once the exchange has been asserted
+ */
 function assertExchange(channel, exchange, callback) {
     if (typeof exchange === 'string') {
         exchange = { name: exchange };
@@ -56,6 +73,13 @@ function assertExchange(channel, exchange, callback) {
     );
 }
 
+/**
+ * Assert that a queue exists (create it if non-existant)
+ *
+ * @param {AmqpChannel}   channel  Amqp channel to use for asserting the queue
+ * @param {Object|String} queue    Object containing the `name` and an optional object of `options` to use
+ * @param {Function}      callback Function to call once the queue has been asserted
+ */
 function assertQueue(channel, queue, callback) {
     if (typeof queue === 'string') {
         queue = { name: queue };
@@ -80,6 +104,14 @@ function assertQueue(channel, queue, callback) {
     );
 }
 
+/**
+ * Bind a queue to an exchange
+ *
+ * @param {AmqpChannel} channel  Amqp channel to use for binding
+ * @param {Object}      binding  Object containing `queue` and `exchange` names to bind.
+ *                               Also supports `pattern` and an object of optional `arguments`.
+ * @param {Function}    callback Function to call once the binding has been completed
+ */
 function assertBinding(channel, binding, callback) {
     channel.bindQueue(
         binding.queue,
@@ -90,6 +122,12 @@ function assertBinding(channel, binding, callback) {
     );
 }
 
+/**
+ * Validate that the assertions given are arrays
+ *
+ * @param  {Object} assertions
+ * @return {Boolean|Error}
+ */
 function validateAssertions(assertions) {
     var i, type;
     for (i = 0; i < types.length; i++) {
