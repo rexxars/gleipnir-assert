@@ -1,6 +1,6 @@
 {
   "name": "gleipnir-assert",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Gleipnir module that asserts exchanges, queues and bindings",
   "main": "src/index.js",
   "scripts": {
