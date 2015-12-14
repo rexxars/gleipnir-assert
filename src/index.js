@@ -2,6 +2,7 @@
 
 var async = require('async');
 var pick = require('lodash.pick');
+var pluck = require('lodash.pluck');
 var merge = require('lodash.merge');
 var partial = require('lodash.partial');
 
@@ -41,13 +42,18 @@ function assertStuff(channel, assertions, callback) {
         }
 
         // Step 4, assert the queues
-        async.each(assertions.queues || [], asserters.queue, function onQueuesAsserted(queueErr) {
+        async.map(assertions.queues || [], asserters.queue, function onQueuesAsserted(queueErr, queues) {
             if (queueErr) {
                 return callback(queueErr);
             }
 
+            // Pluck the queue names from assert results
+            queues = pluck(queues, 'queue');
+
             // Step 5, assert the bindings
-            async.each(assertions.bindings || [], asserters.binding, callback);
+            async.each(assertions.bindings || [], asserters.binding, function onBindingsAsserted(bindErr) {
+                callback(bindErr, queues);
+            });
         });
     });
 }
@@ -93,7 +99,9 @@ function assertQueue(channel, queue, callback) {
             }
 
             var binding = merge({ queue: ok.queue }, queue.binding);
-            assertBinding(channel, binding, callback);
+            assertBinding(channel, binding, function onBindingAsserted(bindErr) {
+                callback(bindErr, ok);
+            });
         };
     }
 

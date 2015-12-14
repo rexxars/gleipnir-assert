@@ -107,4 +107,24 @@ describe(pkg.name, function() {
             done();
         });
     });
+
+    it('should respond with the names of the queues on success', function(done) {
+        var stub = channel.assertQueue = sinon.stub();
+        stub
+            .onFirstCall().yields(null, { queue: 'some-q-name' })
+            .onSecondCall().yields(null, { queue: 'given-name' });
+
+        var assertQs = [
+            { binding: { exchange: 'some-ex' } },
+            { name: 'given-name' }
+        ];
+
+        gleipAssert(channel, { queues: assertQs }, function(err, queues) {
+            assert(!err);
+            sinon.assert.calledWith(channel.bindQueue, 'some-q-name', 'some-ex');
+            assert.equal(queues[0], 'some-q-name');
+            assert.equal(queues[1], 'given-name');
+            done();
+        });
+    });
 });
